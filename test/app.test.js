@@ -91,8 +91,8 @@ describe("POST /register", () => {
       .post("/register")
       .send(userExample)
       .expect(201)
-        .then(async (response) => {
-          assert.isTrue(response._body.ok)
+      .then(async (response) => {
+        assert.isTrue(response._body.ok);
         assert.isNotEmpty(response._body); //no esta vacio
         assert.isNotArray(response._body);
         assert.containsAllKeys(response._body.usuario, [
@@ -117,10 +117,10 @@ describe("POST /register", () => {
       .then(() => done(), done);
   });
 
-  it("Should not allowed user to register twice", done => {
+  it("Should not allowed user to register twice", (done) => {
     //TO-DO
     //Check that repeated user doesnt persist
-  })
+  });
 });
 
 describe("POST /login", () => {
@@ -149,104 +149,104 @@ describe("POST /login", () => {
   });
 });
 
-describe('POST /favourite/:code', () => {
-  beforeEach(done => {
+describe("POST /favourite/:code", () => {
+  beforeEach((done) => {
     //Crear usuario y pelicula
-  })
-  it("Should return 201 and set movie as favourite for logged user with review", done => {
+  });
+  it("Should return 201 and set movie as favourite for logged user with review", (done) => {
     // TO-DO
     // Check status
     // Check si se registro el cambio en la DB
     // Check si el registro en la DB es correcto
-  })
-  it("Should return 201 and set movie as favourite for logged user without review", done => {
+  });
+  it("Should return 201 and set movie as favourite for logged user without review", (done) => {
     // TO-DO
     // Check status
     // Check si se registro el cambio en la DB
     // Check si el registro en la DB es correcto
-  })
-  it("Should not allow to favourite the same movie twice", done => {
+  });
+  it("Should not allow to favourite the same movie twice", (done) => {
     //TO-DO, llamar al endpoint con la misma peli 2 veces
     // Check error status
     // Check error message
     // Check db que no se haya persistido un registro
-  })
-})
+  });
+});
 
-describe('GET /favourites', () => {
-  beforeEach(done => {
+describe("GET /favourites", () => {
+  beforeEach((done) => {
     // Crear usuario, pelicula y agregar favoritos
-  })
-  it("Should return 200 status and logged user favourite list", done => {
+  });
+  it("Should return 200 status and logged user favourite list", (done) => {
     // TO-DO
-    // checkear que sea un array 
+    // checkear que sea un array
     // checkear que tenga la cantidad correcta de elementos
     // checkear las clave de cada elemento
     // checkear que los elementos sean/sea el/los correctos
-  })
-  it("Should forbid access to non logged user", done => {
+  });
+  it("Should forbid access to non logged user", (done) => {
     //TO-DO
     //Chequear status
     //Chequear mensaje de error
-  })
-})
+  });
+});
 
-describe('POST /rent/:code', () => {
-  beforeEach(done => {
+describe("POST /rent/:code", () => {
+  beforeEach((done) => {
     // Crear usuario, pelicula
-    })
-    it("Should return 201 and successfully rent a movie", done => {
-      //TO_DO
-      //Check status
-      //Chequear si se persistio correctamente la reserva
-      //Chequear que se quito una peli de stock
-      //Chequear que se sumo la renta a las veces alquiladas
-    })
-    it("Should not allow rent if there is no stock", done => {
-      //TO-DO
-    })
-    it("Should not allow rent if movie does not exist", done => {
-      //TO-DO
-    })
-    it("Should not allow non logged user to rent a movie", done => {
-      //TO-DO
-    })
-  })
+  });
+  it("Should return 201 and successfully rent a movie", (done) => {
+    //TO_DO
+    //Check status
+    //Chequear si se persistio correctamente la reserva
+    //Chequear que se quito una peli de stock
+    //Chequear que se sumo la renta a las veces alquiladas
+  });
+  it("Should not allow rent if there is no stock", (done) => {
+    //TO-DO
+  });
+  it("Should not allow rent if movie does not exist", (done) => {
+    //TO-DO
+  });
+  it("Should not allow non logged user to rent a movie", (done) => {
+    //TO-DO
+  });
+});
 
-describe("POST /return/:code", done => {
-  beforeEach(done => {
+describe("POST /return/:code", (done) => {
+  beforeEach((done) => {
     // Crear usuario, pelicula, y rentas, una vencida y una sin vencer
-  })
-  it("Should return a rental on time", done => {
+  });
+  it("Should return a rental on time", (done) => {
     //TO-DO
     //Chequear status code 200
     //Chequear que se devuelva correctamente el precio
     //Chequear que se restockee correctamente la pelicula
     //Chequear que se persitio la fecha de devolucion
-  })
-  it("Should return late rental", done => {
+  });
+  it("Should return late rental", (done) => {
     //TO-DO
     //Chequear status code 200
     //Chequear que se devuelva correctamente el precio con el agregado
     //Chequear que se restockee correctamente la pelicula
     //Chequear que se persitio la fecha de devolucion
-  })
-  it("Should return a movie that was rented a second time", done => {
+  });
+  it("Should return a movie that was rented a second time", (done) => {
     //TO-DO
-  })
-  it("Should not allow to rent movie twice simultaneously", done => {
+  });
+  it("Should not allow to rent movie twice simultaneously", (done) => {
     //TO-DO
-  })
-  it("Should not allow to return already returned movie", done => {
+  });
+  it("Should not allow to return already returned movie", (done) => {
     //TO-DO
-  })
-  it("Should not allow to return non rented movie", done => {
+  });
+  it("Should not allow to return non rented movie", (done) => {
     //TO-DO
-  })
-  it("Should not allow non logged user to return a movie", done => {
+  });
+  it("Should not allow non logged user to return a movie", (done) => {
     //TO-DO
-  })
-})
+  });
+});
 
 describe("Not Found handling", () => {
   it("Should return status 404", (done) => {
