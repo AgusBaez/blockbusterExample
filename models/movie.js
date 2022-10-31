@@ -10,22 +10,25 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       // Movie.belongsToMany(models.User, { through: "FavouriteFilms" });
-      Movie.belongsToMany(models.Rent, { through: "Rent" })
+      Movie.belongsToMany(models.Rent, { through: "Rent" });
     }
   }
-  Movie.init({
-    code: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      primaryKey: true
+  Movie.init(
+    {
+      code: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        primaryKey: true,
+      },
+      title: DataTypes.STRING,
+      stock: DataTypes.INTEGER,
+      rentals: DataTypes.INTEGER,
     },
-    title: DataTypes.STRING,
-    stock: DataTypes.INTEGER,
-    rentals: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'Movie',
-  });
+    {
+      sequelize,
+      modelName: "Movie",
+    }
+  );
   return Movie;
 };
