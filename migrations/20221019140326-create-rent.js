@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      code: {
+      MovieCode: {
         type: Sequelize.STRING,
         allowNull: false,
         foreignKey: true,
@@ -40,6 +40,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("rents");
+    await queryInterface.dropTable("Rents");
   },
 };
