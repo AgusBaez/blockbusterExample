@@ -6,16 +6,11 @@ const { Movie, FavouriteFilms } = db;
 // JsonWebToken
 const jwt = require("jsonwebtoken");
 
-async function getFilmFromAPIByName(name) {
-  let films = await fetch("https://ghibliapi.herokuapp.com/films");
-  films = await films.json();
-  return films.find((film) => film.title.includes(name));
-}
-
 const getMovies = async (req, res) => {
-  console.log("Movies");
-  let movies = await fetch("https://ghibliapi.herokuapp.com/films");
+try {
+  let movies = await fetch(GHIBLI_APP);
   movies = await movies.json();
+
   movies = movies.map((movie) => ({
     id: movie.id,
     title: movie.title,
@@ -26,26 +21,62 @@ const getMovies = async (req, res) => {
     running_time: movie.running_time,
     rt_score: movie.rt_score,
   }));
+  
   res.status(200).send(movies);
+} catch (error) {
+  error = new Error("Oww.. Movie Not Found");
+  error.status = 400;
+  res.status(400).send("Movie Not Found");
+  return next(error);
+}
+};
+
+//getmovie By Title por Body
+const getMovieByTitle = async (req, res, next) => {
+  try {
+    const { title } = req.body;
+
+    let movies = await fetch(GHIBLI_APP);
+    movies = await movies.json();
+    const movie = movies.find((film) => film.title.includes(title));
+
+    if (movie.length === 0) {
+      res.status(400).send("Movie Not Found");
+    }
+
+    res.status(200).send(movie);
+  } catch (error) {
+    error = new Error("Oww.. Movie Not Found");
+    error.status = 400;
+    res.status(400).send("Movie Not Found");
+    return next(error);
+  }
 };
 
 const getMoviesByRuntime = async (req, res) => {
-  const maxRuntime = req.params.max;
-  let movies = await fetch("https://ghibliapi.herokuapp.com/films");
-  movies = await movies.json();
-  movies = movies.map((movie) => ({
-    id: movie.id,
-    title: movie.title,
-    description: movie.description,
-    director: movie.director,
-    producer: movie.producer,
-    release_date: movie.producer,
-    running_time: movie.running_time,
-    rt_score: movie.rt_score,
-  }));
-  if (maxRuntime < 137)
-    movies = movies.filter((movie) => movie.running_time <= maxRuntime);
-  res.status(200).send(movies);
+  try {
+    const maxRuntime = req.params.max;
+    let movies = await fetch(GHIBLI_APP);
+    movies = await movies.json();
+    movies = movies.map((movie) => ({
+      id: movie.id,
+      title: movie.title,
+      description: movie.description,
+      director: movie.director,
+      producer: movie.producer,
+      release_date: movie.producer,
+      running_time: movie.running_time,
+      rt_score: movie.rt_score,
+    }));
+    if (maxRuntime < 137)
+      movies = movies.filter((movie) => movie.running_time <= maxRuntime);
+    res.status(200).send(movies);
+  } catch (error) {
+    error = new Error("Oww.. Movie Not Found");
+    error.status = 400;
+    res.status(400).send("Movie Not Found");
+    return next(error);
+  }
 };
 
 const getMovieDetails = async (req, res) => {
@@ -126,6 +157,7 @@ const allFavouritesMovies = async (req, res, next) => {
 module.exports = {
   getMovies,
   getMovieDetails,
+  getMovieByTitle,
   getMoviesByRuntime,
   addMovie,
   addFavourite,
