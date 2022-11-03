@@ -2,7 +2,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("Movies", {
-      code: {
+      MovieCode: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.STRING,
