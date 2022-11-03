@@ -2,26 +2,20 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Rent extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      //n to n with user and film
       Rent.belongsTo(models.User, {
-        foreignKey: "id_user",
-        as: "user",
+        foreignKey: "id_user", //Clave relacion de mi modelo interno
+        targetKey: "id_user", //Clave de la relacion al modelo externo
       });
       Rent.belongsTo(models.Movie, {
-        foreignKey: "code",
-        as: "film",
+        foreignKey: "MovieCode",
+        targetKey: "MovieCode",
       });
     }
   }
   Rent.init(
     {
-      id_Rent: {
+      id_rent: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -31,12 +25,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      code: {
+      MovieCode: {
         type: DataTypes.STRING,
         allowNull: false,
         foreignKey: true,
       },
-      Rent_date: {
+      rent_date: {
         type: DataTypes.DATE,
         allowNull: false,
       },
