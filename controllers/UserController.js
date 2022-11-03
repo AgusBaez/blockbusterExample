@@ -62,14 +62,14 @@ const register = (req, res, next) => {
   });
 };
 
-const logOut = (res, req, next) => {
-  //Destruir el token
-  //cerrar session
-  //devolver mensaje.
+const singOut = (req, res, next) => {
+  req.user = null;
+
+  res.redirect("/login");
 };
 
 module.exports = {
   login,
   register,
-  logOut,
+  singOut,
 };
