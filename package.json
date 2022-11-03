@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node app.js",
     "test": "mocha --exit",
-    "migrate": "npx sequelize-cli db:migrate"
+    "migrate": "npx sequelize-cli db:migrate",
+    "seeds": "npx sequelize-cli db:seed:all"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +21,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
     "node-fetch": "^3.2.9",
+    "nodemailer": "^6.8.0",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.23.2",
