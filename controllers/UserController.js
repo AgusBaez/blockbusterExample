@@ -40,32 +40,49 @@ const login = (req, res, next) => {
         token,
       });
     })
-    .catch((error) => next(error));
+    .catch((error) => {
+      error = new Error("An error occurred when LOGIN user");
+      error.status = 400;
+      res.status(400).send("An erroUsuario o contraseña incorrectos");
+      return next(error);
+    });
 };
 
 const register = (req, res, next) => {
-  let { email, password, dni, phone } = req.body;
-  let usuario = {
-    email,
-    dni,
-    phone,
-    password: bcrypt.hashSync(password, 10),
-  };
-  User.create(usuario).then((usuarioDB) => {
-    return res
-      .status(201)
-      .json({
-        ok: true,
-        usuario: usuarioDB,
-      })
-      .end();
-  });
+  try {
+    let { email, password, dni, phone } = req.body;
+    let usuario = {
+      email,
+      dni,
+      phone,
+      password: bcrypt.hashSync(password, 10),
+    };
+    User.create(usuario).then((usuarioDB) => {
+      return res
+        .status(201)
+        .json({
+          ok: true,
+          usuario: usuarioDB,
+        })
+        .end();
+    });
+  } catch (error) {
+    error = new Error("An error occurred when REGISTER user");
+    error.status = 400;
+    res.status(400).send("An error occurred when register, try again");
+    return next(error);
+  }
 };
 
 const singOut = (req, res, next) => {
   req.user = null;
 
-  res.redirect("/login");
+  res.redirect("/login").catch((e) => {
+    error = new Error("An error occurred when singOut");
+    error.status = 400;
+    res.status(400).send("An error occurred, try again");
+    return next(error);
+  });
 };
 
 module.exports = {
