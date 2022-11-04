@@ -3,8 +3,6 @@ const fetch = (url) =>
 const GHIBLI_APP = "https://ghibliapi.herokuapp.com/films/";
 const db = require("../models/index");
 const { Movie, FavouriteFilms } = db;
-// JsonWebToken
-const jwt = require("jsonwebtoken");
 
 const getMovies = async (req, res) => {
 try {
