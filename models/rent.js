@@ -4,24 +4,22 @@ module.exports = (sequelize, DataTypes) => {
   class Rent extends Model {
     static associate(models) {
       Rent.belongsTo(models.User, {
-        foreignKey: "id_user", //Clave relacion de mi modelo interno
-        targetKey: "id_user", //Clave de la relacion al modelo externo
+        targetKey: "id" //Apunta a mi modelo interno
       });
       Rent.belongsTo(models.Movie, {
-        foreignKey: "MovieCode",
-        targetKey: "MovieCode",
+        targetKey:"code",
       });
     }
   }
   Rent.init(
     {
-      id_rent: {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      id_user: {
+      UserId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },

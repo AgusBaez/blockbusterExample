@@ -3,11 +3,12 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
+      User.belongsToMany(models.Rent, { through: "Rent" });
     }
   }
   User.init(
     {
-      id_user: {  
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
