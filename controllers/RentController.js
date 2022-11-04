@@ -28,16 +28,28 @@ const daysDifference = (start, end) => {
   return differenceDays;
 };
 
-const rentMovie = (req, res, next) => {
-  const { code } = req.params;
+const allRents = (req, res, next) => {
+  let id = req.user.id_user;
 
-  //console.log(req.usuario.id_user);
-  Movie.findOne({ where: { MovieCode: code, stock: { [Op.gt]: 0 } } })
+  Rent.findOne({
+    where: {
+      userId: id,
+    },
+  }).then((rental) => res.status(200).send(rental));
+};
+
+const rentMovie = async (req, res, next) => {
+  const paramData = req.params;
+
+  await Movie.findOne({
+    where: { code: paramData.code, stock: { [Op.gt]: 0 } },
+  })
     .then((rental) => {
       if (!rental) throw new Error(" Missing stock ");
+
       Rent.create({
-        MovieCode: rental.code,
-        id_user: req.usuario.id_user,
+        MovieCode: paramData.code,
+        UserId: req.user.id_user,
         rent_date: new Date(Date.now()),
         refund_date: new Date(Date.now() + 3600 * 1000 * 24 * 7),
       })
@@ -96,6 +108,7 @@ const devMovie = (req, res, next) => {
 };
 
 module.exports = {
+  allRents,
   rentMovie,
   devMovie,
 };
