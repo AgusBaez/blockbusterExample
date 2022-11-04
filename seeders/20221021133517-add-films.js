@@ -6,7 +6,7 @@ module.exports = {
     let movies = await fetch('https://ghibliapi.herokuapp.com/films');
     movies = await movies.json();
     let movieArray = movies.map(movie => ({
-      MovieCode: movie.id,
+      code: movie.id,
       title: movie.title,
       stock: 5,
       rentals: 0,
