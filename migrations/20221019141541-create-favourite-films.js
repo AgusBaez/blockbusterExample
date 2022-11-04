@@ -8,13 +8,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      MovieCode: {
+      pepitoIsEvil: {
         type: Sequelize.STRING,
         unique: true,
         allowNull: false,
         foreignKey: true,
       },
-      UserId: {
+      evilPepito: {
         type: Sequelize.INTEGER,
         allowNull: false,
         foreignKey: true,

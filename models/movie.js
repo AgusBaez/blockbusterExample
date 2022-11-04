@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Movie.init(
     {
-      MovieCode: {
+      code: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
