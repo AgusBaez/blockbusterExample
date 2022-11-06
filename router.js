@@ -4,24 +4,30 @@ const bodyParser = require("body-parser");
 const MovieController = require("./controllers/MovieController");
 const UsersController = require("./controllers/UserController");
 const RentController = require("./controllers/RentController");
-const { checkLoggedIn, checkLoggedUser } = require("./middlewares/checks");
+const { checkLoggedUser } = require("./middlewares/checks");
 const errorHandler = require("./middlewares/errorHandler");
 
 router.use(bodyParser.json());
 router.get("/movies", checkLoggedUser, MovieController.getMovies);
-router.post("/movie", checkLoggedIn, MovieController.addMovie);
-router.get("/movies/title", MovieController.getMovieByTitle);
-router.get("/movies/:id", MovieController.getMovieDetails);
-router.get("/runtime/:max", MovieController.getMoviesByRuntime);
+router.post("/movie", checkLoggedUser, MovieController.addMovie);
+router.get("/movies/title", checkLoggedUser, MovieController.getMovieByTitle);
+router.get("/movies/:id", checkLoggedUser, MovieController.getMovieDetails);
+router.get(
+  "/runtime/:max",
+  checkLoggedUser,
+  MovieController.getMoviesByRuntime
+);
 router.get("/favourites", checkLoggedUser, MovieController.allFavouritesMovies);
 router.post("/favourite/:code", checkLoggedUser, MovieController.addFavourite);
 
 router.post("/register", UsersController.register);
 router.post("/login", UsersController.login);
-router.get("/login", (req, res) => res.send("You must to logued in"));
+router.get("/login", (req, res) =>
+  res.send("ooh.. See you soon!! BlockBuster says, please log in.")
+);
 router.get("/signout", checkLoggedUser, UsersController.singOut);
 
-router.get("/rent", checkLoggedUser, RentController.allRents)
+router.get("/rent", checkLoggedUser, RentController.allRents);
 router.put("/rent/:code", checkLoggedUser, RentController.devMovie);
 router.post("/rent/:code", checkLoggedUser, RentController.rentMovie);
 
