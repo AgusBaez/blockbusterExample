@@ -75,14 +75,16 @@ const register = (req, res, next) => {
 };
 
 const singOut = (req, res, next) => {
-  req.user = null;
+  try {
+    req.user = null;
 
-  res.redirect("/login").catch((e) => {
+    res.redirect("/login");
+  } catch (error) {
     error = new Error("An error occurred when singOut");
     error.status = 400;
     res.status(400).send("An error occurred, try again");
     return next(error);
-  });
+  }
 };
 
 module.exports = {
