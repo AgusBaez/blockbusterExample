@@ -1,42 +1,26 @@
 const jwt = require("jsonwebtoken");
 
-const checkLoggedIn = (req, res, next) => {
-  const token = req.headers.authorization.split(" ")[1];
-  let decoded = jwt.decode(token, { complete: true });
-  if (!decoded) {
-    const e = new Error("No se permite");
-    next(e);
-  } else {
-    next();
-  }
-};
-
-const checkAdmin = (req, res, next) => {
-  const token = req.headers.authorization.split(" ")[1];
-  let decoded = jwt.decode(token, { complete: true });
-  if (!decoded || decoded.payload.usuario.role !== "ADMIN") {
-    const e = new Error("No se permite");
-    next(e);
-  } else {
-    next();
-  }
-};
-
 const checkLoggedUser = (req, res, next) => {
-  const token = req.headers.authorization.split(" ")[1];
-  let decoded = jwt.decode(token, { complete: true });
-  if (!decoded) {
-    const e = new Error("Unauthorized(401)");
-    res.status(401).send("Not authorized, try to log in");
-    return next(e);
-  } else {
-    req.user = decoded.payload.usuario;
-    return next();
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    let decoded = jwt.decode(token, { complete: true });
+    if (!decoded) {
+      const e = new Error("Unauthorized(401)");
+      res.status(401).send("Not authorized, try to log in");
+      return next(e);
+    } else {
+      req.user = decoded.payload.usuario;
+      return next();
+    }
+  } catch (error) {
+    console.log(error);
+    error = new Error("User Not logged in");
+    error.status = 401;
+    return res.redirect("/login");
   }
 };
 
 module.exports = {
-  checkAdmin,
-  checkLoggedIn,
+  //checkAdmin,
   checkLoggedUser,
 };
