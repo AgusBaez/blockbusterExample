@@ -7,13 +7,13 @@ module.exports = (sequelize, DataTypes) => {
         targetKey: "id" //Apunta a mi modelo interno
       });
       Rent.belongsTo(models.Movie, {
-        targetKey:"code",
+        targetKey:"MovieCode",
       });
     }
   }
   Rent.init(
     {
-      id: {
+      RentId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      MovieCode: {
+      MovieMovieCode: {
         type: DataTypes.STRING,
         allowNull: false,
         foreignKey: true,

@@ -3,7 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("Rents", {
-      id: {
+      RentId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      MovieCode: {
+      MovieMovieCode: {
         type: Sequelize.STRING,
         allowNull: false,
         foreignKey: true,

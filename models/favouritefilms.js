@@ -6,7 +6,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       FavouriteFilms.hasMany(models.Movie, {
         foreignKey: "MovieCode",
-        target_key: "code",
       });
       FavouriteFilms.hasMany(models.User, {
         foreignKey: "id_user",

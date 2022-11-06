@@ -3,12 +3,12 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Movie extends Model {
     static associate(models) {
-      Movie.belongsToMany(models.Rent, { through: "Rent" });
+      //Movie.belongsToMany(models.Rent, { through: "Rent" });
     }
   }
   Movie.init(
     {
-      code: {
+      MovieCode: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
