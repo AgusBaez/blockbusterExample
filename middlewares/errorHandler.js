@@ -24,6 +24,7 @@ const errorParser = (error, req, res, next) => {
 const notFound = (req, res, next) => {
   const err = new Error("Not Found");
   err.status = 404;
+  res.status(404).send("BlockBuster says Sorry, we can't find your movie (404 Not Found)");
   return next(err);
 };
 
