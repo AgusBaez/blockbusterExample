@@ -56,6 +56,7 @@ const register = (req, res, next) => {
       dni,
       phone,
       password: bcrypt.hashSync(password, 10),
+      id_user: "Parche"
     };
     User.create(usuario).then((usuarioDB) => {
       return res
