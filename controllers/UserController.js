@@ -48,7 +48,7 @@ const login = (req, res, next) => {
     });
 };
 
-const register = (req, res, next) => {
+const register = async (req, res, next) => {
   try {
     let { email, password, dni, phone } = req.body;
     let usuario = {
@@ -56,18 +56,30 @@ const register = (req, res, next) => {
       dni,
       phone,
       password: bcrypt.hashSync(password, 10),
-      id_user: "Parche"
+      id_user: "Parche",
     };
-    User.create(usuario).then((usuarioDB) => {
-      return res
-        .status(201)
-        .json({
+
+    const userHunting = await User.findOne({
+      where: { email: email },
+      where: { dni: dni }
+    });
+    console.log(await userHunting);
+    if (!userHunting) {
+      await User.create(usuario).then((usuarioDB) => {
+        return res.status(201).json({
           ok: true,
           usuario: usuarioDB,
-        })
-        .end();
-    });
+        });
+      });
+    } else {
+      return res
+        .status(400)
+        .send(
+          "BlockBuster says: the mail already belongs to another user, please try with another email address"
+        );
+    }
   } catch (error) {
+    console.log(error);
     error = new Error("An error occurred when REGISTER user");
     error.status = 400;
     res.status(400).send("An error occurred when register, try again");
