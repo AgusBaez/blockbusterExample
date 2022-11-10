@@ -50,20 +50,20 @@ const login = (req, res, next) => {
 
 const register = async (req, res, next) => {
   try {
-    let { email, password, dni, phone } = req.body;
+    let { email, password, dni, phone, id_user} = req.body;
     let usuario = {
       email,
       dni,
       phone,
       password: bcrypt.hashSync(password, 10),
-      id_user: "Parche",
+      id_user,
     };
 
     const userHunting = await User.findOne({
       where: { email: email },
-      where: { dni: dni }
+      where: { dni: dni },
     });
-    console.log(await userHunting);
+
     if (!userHunting) {
       await User.create(usuario).then((usuarioDB) => {
         return res.status(201).json({
@@ -75,7 +75,7 @@ const register = async (req, res, next) => {
       return res
         .status(400)
         .send(
-          "BlockBuster says: the mail already belongs to another user, please try with another email address"
+          "BlockBuster says: the credentials already belongs to another user, please try again"
         );
     }
   } catch (error) {

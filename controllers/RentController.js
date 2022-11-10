@@ -1,29 +1,13 @@
 const db = require("../models/index");
 const { Rent, Movie } = db;
 const { Op } = require("sequelize");
-
-//Calcular los dias de alquiler
-const daysDifference = (start, end) => {
-  const dateOne = new Date(start);
-
-  const dateSecond = new Date(end);
-
-  const oneDay = 3600 * 1000 * 24;
-
-  const differenceTime = dateSecond.getTime() - dateOne.getTime();
-
-  const differenceDays = Math.round(differenceTime / oneDay);
-
-  return differenceDays;
-};
+const { rentPrice } = require("../middlewares/priceRent");
 
 const allRents = async (req, res, next) => {
   try {
-    let id = req.user.id_user;
-
     await Rent.findOne({
       where: {
-        UserId: id,
+        UserUserId: req.user.UserId,
       },
     }).then((rental) => {
       res.status(200).send(rental);
@@ -44,10 +28,13 @@ const rentMovie = async (req, res, next) => {
     where: { MovieCode: code, stock: { [Op.gt]: 0 } },
   })
     .then(async (rental) => {
-      if (!rental) throw new Error(" Missing stock ");
+      if (!rental) {
+        new Error(" Missing stock ");
+        res.status(400).send("BlockBuster says: Missing Stock");
+      }
       await Rent.create({
         MovieMovieCode: code,
-        UserId: req.user.id_user,
+        UserUserId: req.user.UserId,
         rent_date: new Date(Date.now()),
         refund_date: new Date(Date.now() + 3600 * 1000 * 24 * 7),
       })
@@ -74,51 +61,63 @@ const rentMovie = async (req, res, next) => {
     });
 };
 
-//Funcion agregar un 10% del precio original por cada dia de tardanza
-const lateRefund = async (originalPrice, daysLate) => {
-  let finalPrice = originalPrice;
+const devMovie = async (req, res, next) => {
+  //Codigo de la pelicula
+  try {
+    const { code } = req.params;
 
-  for (let i = 0; i < daysLate; i++) {
-    finalPrice += finalPrice * 0.1;
-  }
-
-  return await finalPrice;
-};
-
-const devMovie = (req, res, next) => {
-  const { code } = req.params;
-
-  Rent.update(
-    { userRefund_date: Date.now() },
-    { where: { MovieMovieCode: code, UserId: req.user.id_user } }
-  ).then(async (rent) => {
-    let movie = await Movie.findOne({ where: { MovieCode: code } });
-    Movie.update(
-      { stock: movie.stock + 1 },
-      { where: { MovieCode: code } }
-    ).then(async () => {
-      if (
-        daysDifference(rent.Rent_date, rent.userRefund_date) <=
-        daysDifference(rent.Rent_date, rent.refund_date)
-      ) {
-        res.status(200).send({
-          msg: `Entrega a tiempo, Precio final: ${
-            daysDifference(rent.Rent_date, rent.refund_date) * 10
-          }`,
-          onTime: true,
-        });
+    //Busca si existe la renta
+    await Rent.findOne({
+      where: {
+        MovieMovieCode: code,
+        UserUserId: req.user.UserId,
+        userRefund_date: null,
+      },
+    }).then(async (rent) => {
+      if (!rent) {
+        return res.status(404).json({ errorMessage: "Rent not found" });
       } else {
-        console.log();
-        res.status(200).send({
-          msg: `Entrega tardia, Precio final: ${await lateRefund(
-            400,
-            daysDifference(rent.Rent_date, rent.userRefund_date)
-          )} `,
-          onTime: false,
-        });
+        //La pelicula alquilada es;
+        let movie = await Movie.findOne({ where: { MovieCode: code } });
+        //Actualizar: Stock de la pelicula;
+        await Movie.update(
+          { stock: movie.stock + 1 },
+          { where: { MovieCode: code } }
+        );
+
+        await Rent.update(
+          //Actualizar: fecha de devolcion en la renta donde:
+          { userRefund_date: Date.now() },
+          {
+            where: {
+              MovieMovieCode: code,
+              UserUserId: req.user.UserId,
+              userRefund_date: null,
+            },
+          }
+        );
+
+        res
+          .status(200)
+          .send(
+            `The movie was returned on date ${Date(
+              rent.dataValues.userRefund_date
+            )}, \n The expected date is ${Date(
+              rent.dataValues.refund_date
+            )}, \n Final price is: ${rentPrice(
+              (userReturn = rent.dataValues.userRefund_date),
+              (estimatedDate = rent.dataValues.refund_date)
+            )}`
+          );
       }
     });
-  });
+  } catch (error) {
+    console.log(error);
+    error = new Error("Error in the return of a film");
+    error.status = 400;
+    res.status(400).send("BlockBuster says Error while returning a rent");
+    return next(error);
+  }
 };
 
 module.exports = {
