@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   class Rent extends Model {
     static associate(models) {
       Rent.belongsTo(models.User, {
-        targetKey: "id" //Apunta a mi modelo interno
+        targetKey: "UserId" //Apunta a mi modelo interno
       });
       Rent.belongsTo(models.Movie, {
         targetKey:"MovieCode",
@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      UserId: {
+      UserUserId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
